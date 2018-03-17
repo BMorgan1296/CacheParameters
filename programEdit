@@ -1,0 +1,5 @@
+#!/bin/bash
+
+assoc=10
+
+sed -i -e "/#define L1_ASSOCIATIVITY */c\#define L1_ASSOCIATIVITY $assoc" ./cpuid.c #replaces L1 associativity in given file
