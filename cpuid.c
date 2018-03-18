@@ -57,10 +57,13 @@ int main()
     int eax, ebx, ecx, edx;
     eax = 0x80000006;
     native_cpuid(&eax, &ebx, &ecx, &edx);
-    printf("\nL2 Cache Size = %d\n", (ecx & 0xFF)); //see https://www.scss.tcd.ie/Jeremy.Jones/CS4021/processor-identification-cpuid-instruction-note.pdf PAGE 47
+    printf("\nL2 Cache Size = %d\n", ecx & ((1<<14)-1)); //see https://www.scss.tcd.ie/Jeremy.Jones/CS4021/processor-identification-cpuid-instruction-note.pdf PAGE 47
     printf("\n12 = %08X\n", (ecx & ((1<<12)-1)));
-    printf("\n13 = %08X\n", (edx & ((1<<13)-1)));
-    printf("\n14 = %08X\n", (edx & ((1<<14)-1)));
-    printf("\n15 = %08X\n", (edx & ((1<<15)-1)));
+    printf("\n13 = %08X\n", (ecx & ((1<<13)-1)));
+    printf("\n14 = %08X\n", (ecx & ((1<<14)-1)));
+    printf("\n15 = %08X\n", (ecx & ((1<<15)-1)));
+    printf("\n16 = %08X\n", (ecx & ((1<<16)-1)));
+    printf("\n17 = %08X\n", (ecx & ((1<<17)-1)));
+    printf("\n18 = %08X\n", (ecx & ((1<<18)-1)));
     return 0;
 }
