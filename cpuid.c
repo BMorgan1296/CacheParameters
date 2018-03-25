@@ -1,69 +1,35 @@
-/*#include <stdio.h>
-#include <stdint.h>
-#include <inttypes.h>
-
-int main() //http://www.sandpile.org/x86/cpuid.htm and also https://www.scss.tcd.ie/Jeremy.Jones/CS4021/processor-identification-cpuid-instruction-note.pdf
-{
-	int32_t op = 2;  // input:  eax
-	int32_t eax; // output: eax
-	int32_t ebx; // output: ebx
-	int32_t ecx; // output: ecx
-	int32_t edx; // output: edx
-    
-	__asm__ volatile(
-			"cpuid;" //  call cpuid instruction
-			:"=a"(eax),"=b"(ebx),"=c"(ecx), "=d"(edx)// output equal to "movl  %%eax %1"
-			:"a"(op)// input equal to "movl %1, %%eax"
-			//:"%eax","%ebx","%ecx","%edx"// clobbered register
-			);
-
-	printf("\nShift: %d  |  eax: %X   ebx: 0x%08X   ecx: 0x%08X   edx: 0x%08X", i, (eax & ((1<<i)-1)), (ebx & ((1<<i)-1)), (ecx & ((1<<i)-1)), (edx & ((1<<i)-1)));
-
-	int i;
-	for(i = 32; i >= 0; i--)
-	{
-		//printf("\nShift: %d  |  eax: %zu   ebx: %zu   ecx: %zu   edx: %zu", i, (unsigned long)(eax & ((1<<i)-1)), (unsigned long)(ebx & ((1<<i)-1)), (unsigned long)(ecx & ((1<<i)-1)), (unsigned long)(edx & ((1<<i)-1)));
-		
-		printf("\nShift: %d  |  eax: 0x%08X   ebx: 0x%08X   ecx: 0x%08X   edx: 0x%08X", i, (eax & ((1<<i)-1)), (ebx & ((1<<i)-1)), (ecx & ((1<<i)-1)), (edx & ((1<<i)-1)));
-		
-		if(i % 8 == 0 && i != 0)
-		{
-			printf("\n\n------------------------ Byte: %d --------------------------\n", (i/8));
-		}
-	}
-	putchar('\n');
-	putchar('\n');
-  
-}*/
-
 #include <stdio.h>
 #include <string.h>
 
-static inline void native_cpuid(unsigned int *eax, unsigned int *ebx,
-                 unsigned int *ecx, unsigned int *edx)
-{
-    
+static inline void native_cpuid(unsigned int regs[])
+{    
     asm volatile("cpuid"
-        : "=a" (*eax),
-        "=b" (*ebx),
-        "=c" (*ecx),
-        "=d" (*edx)
-        : "0" (*eax), "2" (*ecx)
+        : "=a" (regs[0]),
+          "=b" (regs[1]),
+          "=c" (regs[2]),
+          "=d" (regs[3])
+        : "0" (regs[0]), "2" (regs[2])
         : "memory");
+}
+
+void parseRegs(unsigned int regs[])
+{
+	char regStr[4][8];
+
+	int i;
+	for(i = 0; i < 4; i++)	
+		snprintf(regStr[i], 8, "%08X", regs[i]);
+
+	printf("eaxStr: %s ebxStr: %s ecxStr: %s edxStr: %s\n", regStr[0], regStr[1], regStr[2], regStr[3]);	
 }
 
 int main()
 {
-    int eax, ebx, ecx, edx;
-    eax = 0x80000006;
-    native_cpuid(&eax, &ebx, &ecx, &edx);
-    printf("\nL2 Cache Size = %d\n", ecx & ((1<<14)-1)); //see https://www.scss.tcd.ie/Jeremy.Jones/CS4021/processor-identification-cpuid-instruction-note.pdf PAGE 47
-    printf("\n12 = %08X\n", (ecx & ((1<<12)-1)));
-    printf("\n13 = %08X\n", (ecx & ((1<<13)-1)));
-    printf("\n14 = %08X\n", (ecx & ((1<<14)-1)));
-    printf("\n15 = %08X\n", (ecx & ((1<<15)-1)));
-    printf("\n16 = %08X\n", (ecx & ((1<<16)-1)));
-    printf("\n17 = %08X\n", (ecx & ((1<<17)-1)));
-    printf("\n18 = %08X\n", (ecx & ((1<<18)-1)));
+    unsigned int regs[4];
+    regs[0] = 2;
+    native_cpuid(regs);
+
+    parseRegs(regs);
+		
     return 0;
 }
