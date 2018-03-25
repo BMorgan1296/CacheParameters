@@ -41,9 +41,7 @@ void searchFile(FILE *inputFile, char *searchFor, int n)
 			output = "NOT FOUND";
 		}
 
-	currCPU.info[n] = strdup(output);
-
-	
+	currCPU.info[n] = strdup(output);	
 }
 
 int copyCPUINFO()
