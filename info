@@ -1,0 +1,8 @@
+76H,TLB,"Instruction TLB: 2M/4M pages, fully associative, 8 entries "
+03H,TLB,"Data TLB: 4 KByte pages, 4-way set associative, 64 entries"
+63H,TLB,"Data TLB: 2 MByte or 4 MByte pages, 4-way set associative, 32 entries and a separate array with 1 GByte pages, 4-way set associative, 4 entries"
+01H,TLB,"Instruction TLB: 4 KByte pages, 4-way set associative, 32 entries"
+F0H,Prefetch,64-Byte prefetching
+B5H,TLB,"Instruction TLB: 4KByte pages, 8-way set associative, 64 entries"
+FFH,General,"CPUID leaf 2 does not report cache descriptor information, use CPUID leaf 4 to query cache parameters"
+C3H,STLB,"Shared 2nd-Level TLB: 4 KByte /2 MByte pages, 6-way associative, 1536 entries. Also 1GBbyte pages, 4-way, 16 entries."
